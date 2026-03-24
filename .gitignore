@@ -1,3 +1,6 @@
+# PDFs
+*.pdf
+
 # Node
 node_modules/
 dist/
@@ -6,11 +9,12 @@ dist/
 __pycache__/
 *.pyc
 
-# Env files
+# Env
 .env
 
-# uploads
-uploads/
+# IDE
+.idea/
+.vscode/
 
 # OS
 .DS_Store
