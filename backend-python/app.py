@@ -7,7 +7,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import spacy
 
 
-# 🔥 SAFE LOAD (prevents crash if model not found)
+
 try:
     nlp = spacy.load("en_core_web_sm")
 except:
@@ -16,7 +16,7 @@ except:
     nlp = spacy.load("en_core_web_sm")
 
 
-# 🔥 CLEAN FUNCTION
+
 def clean_function(text):
     text = text.lower()
     doc = nlp(text)
@@ -26,7 +26,7 @@ def clean_function(text):
     return " ".join(tokens)
 
 
-# 🔥 PDF EXTRACT
+
 def extract_text_pdf(pdf):
     reader = PdfReader(pdf)
     text = ""
@@ -37,18 +37,18 @@ def extract_text_pdf(pdf):
     return text
 
 
-# 🔥 APP INIT
+
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 
-# 🔥 HOME ROUTE
+
 @app.route("/")
 def home():
     return "ATS Backend Running"
 
 
-# 🔥 MAIN ANALYZE ROUTE
+
 @app.route("/analyze", methods=["POST"])
 def analyze():
     try:
@@ -58,25 +58,25 @@ def analyze():
         if not resume_pdf or not jd_pdf:
             return jsonify({"error": "Both files required"}), 400
 
-        # Extract text
+        
         resume_text = extract_text_pdf(resume_pdf)
         jd_text = extract_text_pdf(jd_pdf)
 
         if not resume_text.strip() or not jd_text.strip():
             return jsonify({"error": "Empty PDF content"}), 400
 
-        # Clean text
+       
         clean_resume = clean_function(resume_text)
         clean_jd = clean_function(jd_text)
 
-        # TF-IDF similarity
+       
         tv = TfidfVectorizer()
         vectors = tv.fit_transform([clean_resume, clean_jd])
 
         score = cosine_similarity(vectors[0], vectors[1])[0][0]
         score = round(score * 100, 2)
 
-        # Keywords
+        
         resume_words = set(clean_resume.split())
         jd_words = set(clean_jd.split())
 
@@ -99,7 +99,7 @@ def analyze():
         return jsonify({"error": str(e)}), 500
 
 
-# 🔥 TEST ROUTE (optional)
+
 @app.route("/test-upload", methods=["GET", "POST"])
 def test_upload():
     if request.method == "POST":
@@ -117,7 +117,7 @@ def test_upload():
     '''
 
 
-# 🔥 RUN
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)

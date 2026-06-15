@@ -13,7 +13,7 @@ export default function Hero() {
       setIndex((prev) => (prev + 1) % images.length);
     }, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length]);
 
   return (
     <section className="relative h-screen flex items-center justify-center text-center overflow-hidden">
